@@ -14,7 +14,7 @@ YfinanceFetcher - 兜底数据源 (Priority 4)
 3. 失败后指数退避重试
 """
 
-import csv
+import re
 import logging
 from datetime import datetime
 from io import StringIO
@@ -53,7 +53,7 @@ except (ImportError, ModuleNotFoundError):
 import os
 
 logger = logging.getLogger(__name__)
-
+_CRYPTO_PAIR_RE = re.compile(r'^[A-Z0-9]{2,10}-(USD|USDT|EUR)$')
 
 class YfinanceFetcher(BaseFetcher):
     """
@@ -89,6 +89,7 @@ class YfinanceFetcher(BaseFetcher):
     def _is_tw_suffix_stock(stock_code: str) -> bool:
         """Return True for supported Taiwan suffix-only Yahoo symbols (TWSE `.TW` / TPEx `.TWO`).
 
+
         Taiwan base codes are 4-6 digits (common stocks 4, ETFs/others up to 6,
         e.g. 00878 / 006208), wider than the JP `.T` range.
         """
@@ -117,8 +118,12 @@ class YfinanceFetcher(BaseFetcher):
             '0700.HK'
             >>> fetcher._convert_stock_code('AAPL')
             'AAPL'
-        """
+        """        
         code = stock_code.strip().upper()
+        if code.endswith(('-USD', '-USDT')) and code.split('-')[0].isalnum():
+            return code
+
+
 
         # 美股指数：映射到 Yahoo Finance 符号（如 SPX -> ^GSPC）
         yf_symbol, _ = get_us_index_yf_symbol(code)
@@ -818,7 +823,8 @@ class YfinanceFetcher(BaseFetcher):
         # 仅处理美股、港股或 JP/KR/TW suffix-only 股票
         if not (
             self._is_us_stock(stock_code)
-            or _is_hk_market(stock_code)
+            or _is_hk_market(stock_code)        
+            or stock_code.strip().upper().endswith(('-USD', '-USDT'))
             or self._is_jp_kr_suffix_stock(stock_code)
             or self._is_tw_suffix_stock(stock_code)
         ):
