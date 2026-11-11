@@ -1,0 +1,25 @@
+name: 重大数据提醒
+
+on:
+  schedule:
+    - cron: '*/15 * * * 1-5'   # 工作日每 15 分钟检查一次
+  workflow_dispatch:           # 也可以手动点击运行
+
+concurrency:
+  group: event-alert
+  cancel-in-progress: true
+
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: 检查并推送提醒
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scripts/event_alert.py
