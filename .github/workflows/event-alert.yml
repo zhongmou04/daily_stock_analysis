@@ -22,8 +22,5 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}          
-          EVENT_ALERT_LEAD_MIN: "10000"
-          EVENT_ALERT_MIN_MIN: "-10000"
-          EVENT_ALERT_IMPACTS: "High"
 
         run: python scripts/event_alert.py
