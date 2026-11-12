@@ -2291,7 +2291,7 @@ class GeminiAnalyzer:
 - 60–74分：↗️ 偏多 / 震荡向上 (Neutral-Positive) | ★★★☆☆
 - 45–59分：⚖️ 中性 / 观望 (Neutral) | ★★☆☆☆（无明确方向，维持观望）
 - 30–44分：📉 偏空 (Bearish) | ★☆☆☆☆
-- 0–29分：🩸 强烈看空 (Strong Bullish) | ☆☆☆☆☆
+- 0–29分：🩸 强烈看空 (Strong Bearish) | ☆☆☆☆☆
 
 
 ## 评分标准
