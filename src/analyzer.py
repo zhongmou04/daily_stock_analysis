@@ -2034,10 +2034,11 @@ class GeminiAnalyzer:
 
         "battle_plan": {
             "sniper_points": {
-                "ideal_buy": "理想买入点：XX元（在MA5附近）",
-                "secondary_buy": "次优买入点：XX元（在MA10附近）",
-                "stop_loss": "止损位：XX元（跌破MA20或X%）",
-                "take_profit": "目标位：XX元（前高/整数关口）"
+                "ideal_buy": "理想买入点：XX元 (若为IBIT必须附带：约合BTC $XXXX，按IBIT价格×1773.3计算；在MA5附近)",
+                "secondary_buy": "次优买入点：XX元 (若为IBIT必须附带：约合BTC $XXXX，按IBIT价格×1773.3计算；在MA10附近)",
+                "stop_loss": "止损位：XX元 (若为IBIT必须附带：约合BTC $XXXX，按IBIT价格×1773.3计算；跌破MA20或X%)",
+                "take_profit": "目标位：XX元 (若为IBIT必须附带：约合BTC $XXXX，按IBIT价格×1773.3计算；前高/整数关口)"
+
             },
             "position_strategy": {
                 "suggested_position": "建议仓位：X成",
