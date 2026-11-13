@@ -23,7 +23,8 @@ from enum import Enum
 
 import pandas as pd
 import numpy as np
-
+import requests
+ 
 from src.config import get_config
 from src.schemas.decision_scale import signal_key_for_score
 
@@ -202,7 +203,18 @@ class StockTrendAnalyzer:
     def __init__(self):
         """初始化分析器"""
         pass
-    
+        
+    def _get_btc_realtime_price(self) -> float | None:
+            """获取 24 小时 BTC 实时现货价格"""
+      url = "https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT"
+      try:
+        resp = requests.get(url, timeout=5)
+        resp.raise_for_status()
+        return float(resp.json()["data"][0]["last"])
+      except Exception as e:
+        logger.warning(f"获取 BTC 实时价格失败: {e}")
+        return None
+
     def analyze(self, df: pd.DataFrame, code: str) -> TrendAnalysisResult:
         """
         分析股票趋势
@@ -763,6 +775,16 @@ class StockTrendAnalyzer:
         Returns:
             格式化的分析文本
         """
+        btc_info_lines = []
+        if result.code.upper() == "IBIT":
+          est_btc = result.current_price * 1773.3
+          btc_price = self._get_btc_realtime_price()
+          btc_info_lines.append("")
+          btc_info_lines.append("🪙 关联比特币(BTC)参考:")
+          if btc_price:
+            btc_info_lines.append(f"   BTC 24h现货实时价: ${btc_price:,.2f}")
+          btc_info_lines.append(f"   IBIT 折算 BTC 价格: ${est_btc:,.0f}")
+
         lines = [
             f"=== {result.code} 趋势分析 ===",
             f"",
@@ -775,6 +797,8 @@ class StockTrendAnalyzer:
             f"   MA5:  {result.ma5:.2f} (乖离 {result.bias_ma5:+.2f}%)",
             f"   MA10: {result.ma10:.2f} (乖离 {result.bias_ma10:+.2f}%)",
             f"   MA20: {result.ma20:.2f} (乖离 {result.bias_ma20:+.2f}%)",
+                        *btc_info_lines,
+
             f"",
             f"📊 量能分析: {result.volume_status.value}",
             f"   量比(vs5日): {result.volume_ratio_5d:.2f}",
