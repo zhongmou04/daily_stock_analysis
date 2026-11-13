@@ -205,7 +205,7 @@ class StockTrendAnalyzer:
         pass
         
     def _get_btc_realtime_price(self) -> float | None:
-            """获取 24 小时 BTC 实时现货价格"""
+        """获取 24 小时 BTC 实时现货价格"""
       url = "https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT"
       try:
         resp = requests.get(url, timeout=5)
