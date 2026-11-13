@@ -206,14 +206,15 @@ class StockTrendAnalyzer:
         
     def _get_btc_realtime_price(self) -> float | None:
         """获取 24 小时 BTC 实时现货价格"""
-      url = "https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT"
-      try:
-        resp = requests.get(url, timeout=5)
-        resp.raise_for_status()
-        return float(resp.json()["data"][0]["last"])
-      except Exception as e:
-        logger.warning(f"获取 BTC 实时价格失败: {e}")
-        return None
+        url = "https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT"
+        try:
+            resp = requests.get(url, timeout=5)
+            resp.raise_for_status()
+            return float(resp.json()["data"][0]["last"])
+        except Exception as e:
+            logger.warning(f"获取 BTC 实时价格失败: {e}")
+            return None
+
 
     def analyze(self, df: pd.DataFrame, code: str) -> TrendAnalysisResult:
         """
